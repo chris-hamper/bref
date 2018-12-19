@@ -25,7 +25,7 @@ docker build --build-arg PHP_VERSION=php-$PHP_VERSION -t php-build .
 container=$(docker create php-build)
 
 # Fetch the PHP binary in the container
-docker -D cp $container:/php-src-php-$PHP_VERSION/sapi/cli/php .
+docker -D cp $container:/php-src-php-$PHP_VERSION/sapi/cgi/php-cgi .
 
 # Fetch the extensions that were built too
 mkdir -p ext
@@ -42,10 +42,10 @@ docker -D cp $container:/usr/lib64/libicuio.so.50.1.2 lib/libicuio.so.50
 docker rm $container
 
 # Put all that in an archive
-tar czf php-$PHP_VERSION.tar.gz php ext lib dependencies.yml
-rm php
+tar czf php-$PHP_VERSION.tar.gz php-cgi ext lib dependencies.yml
+rm php-cgi
 rm -rf ext lib
 
 # Upload the archive to AWS S3
-aws s3 cp php-$PHP_VERSION.tar.gz s3://bref-php/bin/ --acl public-read
-rm php-$PHP_VERSION.tar.gz
+#aws s3 cp php-$PHP_VERSION.tar.gz s3://bref-php/bin/ --acl public-read
+#rm php-$PHP_VERSION.tar.gz

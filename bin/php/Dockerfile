@@ -34,20 +34,16 @@ WORKDIR /php-src-$PHP_VERSION
 RUN ./buildconf --force
 
 RUN ./configure \
-    # make sure invalid --configure-flags are fatal errors intead of just warnings
     --enable-option-checking=fatal \
     --enable-static=yes \
     --enable-shared=no \
-    --disable-cgi \
+    --enable-cgi \
     --disable-fpm \
     --disable-phpdbg \
-    # --enable-ftp is included here because ftp_ssl_connect() needs ftp to be compiled statically (see https://github.com/docker-library/php/issues/236)
     --enable-ftp \
-    # --enable-mbstring is included here because otherwise there's no way to get pecl to use it properly (see https://github.com/docker-library/php/issues/195)
     --enable-mbstring \
     --enable-mysqlnd \
     --enable-opcache \
-    # Allows to use the opcache.file_cache option
     --enable-opcache-file \
     --enable-soap \
     --enable-zip \
@@ -56,7 +52,6 @@ RUN ./configure \
     --with-zlib \
     --with-gd \
     --with-pdo-mysql \
-    # https://github.com/docker-library/php/issues/439
     --with-mhash > /dev/null
 
 RUN make -j 5 > /dev/null
